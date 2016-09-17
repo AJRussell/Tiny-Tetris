@@ -1454,7 +1454,7 @@ void loop()
 		drawPiece();
 		drawTetrisScreen();
 		moveTime = millis();
-		while (millis() - moveTime<(dropDelay - level * 50)) processKeys();
+		while (millis() - moveTime<(dropDelay - (level * 50))) processKeys();
 	}
 
 }

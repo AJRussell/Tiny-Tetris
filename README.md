@@ -7,11 +7,13 @@ Things that need to be added:
 
 High score functionality.
 
-Decent random number generator.
-
 Better key pad control code.
 
-Create a letter font so level etc can be shown.
+Add blocks to program memory. 
+
+Decent random number generator.
+
+Create a letter font, create a proper system for rendering numbers and letters.
 
 Tidy up code and optimize for memory, sort out the globals and types.
 

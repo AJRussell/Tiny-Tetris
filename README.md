@@ -11,10 +11,9 @@ Decent random number generator.
 
 Better key pad control code.
 
-Create a font so level etc can be shown.
+Create a letter font so level etc can be shown.
 
-Tidy up code and optimize for memory.
+Tidy up code and optimize for memory, sort out the globals and types.
 
-
-
+Create defines for all the magic numbers but they are useful for now.
 

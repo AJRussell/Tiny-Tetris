@@ -983,7 +983,7 @@ bool processKeys()
 
 	}
 
-	else if ((analogKey < 505) && (analogKey > 500)) {
+	else if ((analogKey < 510) && (analogKey > 500)) {
 
 
 		Debounce++;

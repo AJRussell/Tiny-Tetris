@@ -1088,12 +1088,6 @@ void setScore(long score, bool blank)
 	long tenthousands = ((score / 10000) % 10);
 	long hunderedthousands = ((score / 100000) % 10);
 
-	Serial.println(ones);
-	Serial.println(tens);
-	Serial.println(hundreds);
-	Serial.println(thousands);
-	Serial.println(tenthousands);
-	Serial.println(hunderedthousands);
 
 	//create the score in upper left part of the screen
 	byte font = 0;

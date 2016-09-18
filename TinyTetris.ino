@@ -884,7 +884,7 @@ void processCompletedLines() {
 	}
 
 	//score animation
-	for (long s = score; s < score + amountScored; s = s + (20 * (level+1))) setScore(s, false);
+	for (long s = score; s < score + amountScored; s = s + (5 * (level+1))) setScore(s, false);
 
 	score = score + amountScored;
 	setScore(score, false);

@@ -16,6 +16,8 @@ Add blocks to program memory.
 
 Decent random number generator.
 
+Start thinking about adding sound.
+
 Create a letter font, create a proper system for rendering numbers and letters.
 
 Tidy up code and optimize for memory, sort out the globals and types.

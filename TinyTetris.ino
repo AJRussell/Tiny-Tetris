@@ -12,8 +12,6 @@ High score functionality.
 
 Better key pad control code.
 
-Add blocks to program memory. 
-
 Decent random number generator.
 
 Start thinking about adding sound.

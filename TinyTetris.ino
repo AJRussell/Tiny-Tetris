@@ -273,7 +273,7 @@ void drawTetrisLine(byte x)
 	//fill array with blocks based on blockRow
 
 	//clear page and Optimize array
-	memset(optomizePageArray, 0, 8);   ///review this... declare them here? interesting question...
+	memset(optomizePageArray, 0, 8);   
 	memset(pageArray, 0, 8);
 
 	x++; // up one

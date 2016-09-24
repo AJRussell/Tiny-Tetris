@@ -1,21 +1,24 @@
-/*  Tiny Tetris by Anthony Russell 17-09-2016*/
-
-/*  V0.91                                     */
-
-/*
-  To do:
-  High score functionality.
-  Better key pad control code.
-  Decent random number generator.
-  Start thinking about adding sound.
-  Create a letter font, create a proper system for rendering numbers and letters.
-  Tidy up code and optimize for memory, sort out the globals and types.
-  Create defines for all the magic numbers but they are useful for now.
+/*  Tiny Tetris 
+ V0.91                                     
+Copyright (C) 2016 Anthony Russell
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+To do:
+High score functionality.
+[done] Better key pad control code.
+Decent random number generator.
+[done] Start thinking about adding sound.
+Create a letter font, create a proper system for rendering numbers and letters.
+[more to do] Tidy up code and optimize for memory, sort out the globals and types.
+Create defines for all the magic numbers but they are useful for now.
 
 */
 
 #include <Wire.h>
 #include "TetrisTheme.cpp"
+#include "dpad.cpp"
 
 #define OLED_ADDRESS	        	0x3C //you may need to change this, this is the OLED I2C address.  
 #define OLED_COMMAND	            0x80
@@ -34,22 +37,22 @@
 
 //The pieces ,  To do: this should go in program memory-
 
-const bool  BlockI[4][4] = { { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, };
-const bool  BlockJ[4][4] = { { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 1, 1, 0, 0 }, { 0, 0, 0, 0 }, };
-const bool  BlockL[4][4] = { { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 1, 0 }, { 0, 0, 0, 0 }, };
-const bool  BlockO[4][4] = { { 0, 0, 0, 0 }, { 0, 1, 1, 0 }, { 0, 1, 1, 0 }, { 0, 0, 0, 0 }, };
-const bool  BlockS[4][4] = { { 0, 0, 0, 0 }, { 0, 1, 1, 0 }, { 1, 1, 0, 0 }, { 0, 0, 0, 0 }, };
-const bool  BlockT[4][4] = { { 0, 0, 0, 0 }, { 1, 1, 1, 0 }, { 0, 1, 0, 0 }, { 0, 0, 0, 0 }, };
-const bool  BlockZ[4][4] = { { 0, 0, 0, 0 }, { 1, 1, 0, 0 }, { 0, 1, 1, 0 }, { 0, 0, 0, 0 }, };
+const bool BlockI[4][4] = { { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, };
+const bool BlockJ[4][4] = { { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 1, 1, 0, 0 }, { 0, 0, 0, 0 }, };
+const bool BlockL[4][4] = { { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 1, 0 }, { 0, 0, 0, 0 }, };
+const bool BlockO[4][4] = { { 0, 0, 0, 0 }, { 0, 1, 1, 0 }, { 0, 1, 1, 0 }, { 0, 0, 0, 0 }, };
+const bool BlockS[4][4] = { { 0, 0, 0, 0 }, { 0, 1, 1, 0 }, { 1, 1, 0, 0 }, { 0, 0, 0, 0 }, };
+const bool BlockT[4][4] = { { 0, 0, 0, 0 }, { 1, 1, 1, 0 }, { 0, 1, 0, 0 }, { 0, 0, 0, 0 }, };
+const bool BlockZ[4][4] = { { 0, 0, 0, 0 }, { 1, 1, 0, 0 }, { 0, 1, 1, 0 }, { 0, 0, 0, 0 }, };
 
 // To do: need to enable this at some stage
-//const bool  BlockI[4][4] PROGMEM  = { { 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 0, 1, 0, 0 }, };
-//const bool  BlockJ[4][4] PROGMEM  = { { 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 1, 1, 0, 0 },{ 0, 0, 0, 0 }, };
-//const bool  BlockL[4][4] PROGMEM  = { { 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 0, 1, 1, 0 },{ 0, 0, 0, 0 }, };
-//const bool  BlockO[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 0, 1, 1, 0 },{ 0, 1, 1, 0 },{ 0, 0, 0, 0 }, };
-//const bool  BlockS[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 0, 1, 1, 0 },{ 1, 1, 0, 0 },{ 0, 0, 0, 0 }, };
-//const bool  BlockT[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 1, 1, 1, 0 },{ 0, 1, 0, 0 },{ 0, 0, 0, 0 }, };
-//const bool  BlockZ[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 1, 1, 0, 0 },{ 0, 1, 1, 0 },{ 0, 0, 0, 0 }, };
+//const bool BlockI[4][4] PROGMEM = { { 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 0, 1, 0, 0 }, };
+//const bool BlockJ[4][4] PROGMEM = { { 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 1, 1, 0, 0 },{ 0, 0, 0, 0 }, };
+//const bool BlockL[4][4] PROGMEM = { { 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 0, 1, 1, 0 },{ 0, 0, 0, 0 }, };
+//const bool BlockO[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 0, 1, 1, 0 },{ 0, 1, 1, 0 },{ 0, 0, 0, 0 }, };
+//const bool BlockS[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 0, 1, 1, 0 },{ 1, 1, 0, 0 },{ 0, 0, 0, 0 }, };
+//const bool BlockT[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 1, 1, 1, 0 },{ 0, 1, 0, 0 },{ 0, 0, 0, 0 }, };
+//const bool BlockZ[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 1, 1, 0, 0 },{ 0, 1, 1, 0 },{ 0, 0, 0, 0 }, };
 
 
 // the numbers for score, To do: create letter fonts
@@ -79,20 +82,22 @@ const byte NumberFont[10][8] PROGMEM = {
 #define LED_PIN     13
 #define KEYPAD_PIN  A0
 
+/*
 byte uiKeyLeft = 2;
 byte uiKeyRight = 3;
 byte uiKeyDown = 4;
 byte uiKeyRotate = 5;
-
+*/
 
 //struct for Key press control
 
+/*
 struct keyPress {
   long left;
   long right;
   long down;
   long rotate;
-};
+};*/
 
 
 //struct for pieces
@@ -114,7 +119,7 @@ byte tetrisScreen[14][25] = { { 1 } , { 1 } };
 PieceSpace currentPiece = { 0 };
 PieceSpace oldPiece = { 0 };
 byte nextPiece = 0;
-keyPress key = { 0 };
+//keyPress key = { 0 };
 bool gameOver = false;
 unsigned long moveTime = 0;
 int pageStart = 0;
@@ -126,20 +131,21 @@ int level = 0;
 int levellineCount = 0;
 int dropDelay = 1000;
 
-long keytimer = 0;
-bool processKey = true;
-int Debounce = 0;
-int DebounceMax = 10;
+//long keytimer = 0;
+//bool processKey = true;
+//int Debounce = 0;
+//int DebounceMax = 10;
 
 // put your resistor calibration values here
+/*
 int dpad[5][2] = {
   {460, 480}, //KEY_MIDDLE 0
-  {132, 234}, //KEY_LEFT 1
+  {122, 234}, //KEY_LEFT 1
   {700, 750}, //KEY_RIGHT 2
-  {0,    50}, //KEY_DOWN 3
-  {275, 350}  //KEY_ROTATE 4
+  {-1,   70}, //KEY_DOWN 3
+  {260, 350}  //KEY_ROTATE 4
 };
-
+*/
 int lastKey = 0;
 
 
@@ -165,7 +171,7 @@ void setup() {
   while (!Serial);
 
   Wire.begin();
-//  Wire.setClock(400000);
+  Wire.setClock(400000);
 
   pinMode(PIEZO_PIN, OUTPUT);
   pinMode(LED_PIN, OUTPUT);
@@ -766,115 +772,48 @@ bool processKeys() {
   // not happy with this, To do: sort this out and get the movment right!
   // B = 450-461
 
-  char uiKeyCode = 0;
+  //char uiKeyCode = 0;
   bool keypressed = true;
   int leftRight = 300 - acceleration;
   int rotate = 700;
   int down = 110 - acceleration;
   int analogKey = analogRead(KEYPAD_PIN);
-  Serial.println(analogKey);
-/*
-  if(abs(lastKey-analogKey)>10 && analogKey<1000) {
-    Serial.println(analogKey);
-    lastKey = analogKey;
-    //Debounce = 10;
-  } else {
-    //return;
-  }
-*/
-/*
-  for(int i=0;i<5;i++) {
-    if(analogKey > dpad[i][0] && analogKey < dpad[i][1]) {
-      if(abs(lastKey-analogKey)>10 && analogKey<1000) {
-        //uiKeyCode = i;
-        //lastKey = analogKey;
-      }
-    }
-  }
-  */
-  //Debounce = 0;
 
-  
-  if(analogKey > dpad[KEY_LEFT][0] && analogKey < dpad[KEY_LEFT][1]) {
-    // L = 125-138
-    Debounce++;
-    if(Debounce > DebounceMax) {
-      if(processKey) {
-        uiKeyCode = KEY_LEFT; //key will be processed immediately
-        key.left = millis();
-      }
-      if(millis() < key.left + leftRight) {
-        processKey = false;
-      } else {
-        processKey = true;
-        acceleration = acceleration + 70;
-        if (acceleration > leftRight) {
-          acceleration = leftRight;
-        }
-      }
-    }
-  }	else if(analogKey > dpad[KEY_RIGHT][0] && analogKey < dpad[KEY_RIGHT][1]) {
-    // R = 700-705
-    Debounce++;
-    if (Debounce > DebounceMax) {
-      if (processKey) {
-        uiKeyCode = KEY_RIGHT; //key will be processed immediately
-        key.right = millis();
-      }
-      if (millis() < key.right + leftRight) {
-        processKey = false;
-      } else {
-        processKey = true;
-        acceleration = acceleration + 70;
-        if (acceleration > leftRight) {
-          acceleration = leftRight;
-        }
-      }
-    }
-  } else if(analogKey > dpad[KEY_DOWN][0] && analogKey < dpad[KEY_DOWN][1]) {
-    // D = 0-5
-    Debounce++;
-    if (Debounce > DebounceMax) {
-      if (processKey) {
-        uiKeyCode = KEY_DOWN; //key will be processed immediately
-        key.down = millis();
-      }
-      if (millis() < key.down + down) {
-        processKey = false;
-      } else {
-        processKey = true;
-        acceleration = acceleration + 40;
-        if (acceleration > down) {
-          acceleration = down;
-        }
-      }
-    }
-  }	else if(analogKey > dpad[KEY_ROTATE][0] && analogKey < dpad[KEY_ROTATE][1]) {
-    // U = 270-275
-    Debounce++;
-    if (Debounce > DebounceMax) {
-      if (processKey) {
-        uiKeyCode = KEY_ROTATE; //key will be processed immediately
-        key.rotate = millis();
-      }
-      if (millis() < key.rotate + rotate) {
-        processKey = false;
-      } else {
-        processKey = true;
-      }
-    }
-  }	else {
-    acceleration = 0; 
-    processKey = true; 
-    Debounce = 0;
-  }
+  int dpadpos = Dpad::getPos();
 
-  switch (uiKeyCode) {
-    case KEY_LEFT: movePieceLeft();  break;
-    case KEY_RIGHT: movePieceRight(); break;
-    case KEY_DOWN:  movePieceDown(); break;
-    case KEY_ROTATE: RotatePiece(); break;
-    default: keypressed = false;  break;
+  Serial.println(dpadpos);
+
+  switch(dpadpos) {
+    case KEY_LEFT:
+      if( Dpad::DoDebounce() ) {
+        acceleration = Dpad::setAccel(acceleration, leftRight);
+      }
+      movePieceLeft();
+    break;
+    case KEY_RIGHT:
+      if( Dpad::DoDebounce() ) {
+        acceleration = Dpad::setAccel(acceleration, leftRight);
+      }
+      movePieceRight();
+    break;
+    case KEY_DOWN:
+      if( Dpad::DoDebounce() ) {
+        acceleration = Dpad::setAccel(acceleration, down);
+      }
+      movePieceDown();
+    break;
+    case KEY_ROTATE:
+      if( Dpad::DoDebounce() ) {
+        acceleration = Dpad::setAccel(acceleration, rotate);
+      }
+      RotatePiece();
+    break;
+    default:
+      acceleration = 0; 
+      processKey = true; 
+      Debounce = 0;
+      keypressed = false;
+    break;
   }
 
   if (keypressed) {
@@ -1173,3 +1112,4 @@ void loop() {
     }
   }
 }
+

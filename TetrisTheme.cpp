@@ -14,8 +14,10 @@
 #define TETRISTHEMECPP
 
 #include <Arduino.h>
- 
+
+#ifndef PIEZO_PIN
 #define PIEZO_PIN  (3)
+#endif
 
 // A rest
 #define _R     (0)

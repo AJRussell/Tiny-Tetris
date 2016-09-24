@@ -35,25 +35,13 @@ Create defines for all the magic numbers but they are useful for now.
 #define OLED_SET_COLUMN             0x21
 #define OLED_SET_PAGE	            0x22
 
-//The pieces ,  To do: this should go in program memory-
-
-const bool BlockI[4][4] = { { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, };
-const bool BlockJ[4][4] = { { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 1, 1, 0, 0 }, { 0, 0, 0, 0 }, };
-const bool BlockL[4][4] = { { 0, 1, 0, 0 }, { 0, 1, 0, 0 }, { 0, 1, 1, 0 }, { 0, 0, 0, 0 }, };
-const bool BlockO[4][4] = { { 0, 0, 0, 0 }, { 0, 1, 1, 0 }, { 0, 1, 1, 0 }, { 0, 0, 0, 0 }, };
-const bool BlockS[4][4] = { { 0, 0, 0, 0 }, { 0, 1, 1, 0 }, { 1, 1, 0, 0 }, { 0, 0, 0, 0 }, };
-const bool BlockT[4][4] = { { 0, 0, 0, 0 }, { 1, 1, 1, 0 }, { 0, 1, 0, 0 }, { 0, 0, 0, 0 }, };
-const bool BlockZ[4][4] = { { 0, 0, 0, 0 }, { 1, 1, 0, 0 }, { 0, 1, 1, 0 }, { 0, 0, 0, 0 }, };
-
-// To do: need to enable this at some stage
-//const bool BlockI[4][4] PROGMEM = { { 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 0, 1, 0, 0 }, };
-//const bool BlockJ[4][4] PROGMEM = { { 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 1, 1, 0, 0 },{ 0, 0, 0, 0 }, };
-//const bool BlockL[4][4] PROGMEM = { { 0, 1, 0, 0 },{ 0, 1, 0, 0 },{ 0, 1, 1, 0 },{ 0, 0, 0, 0 }, };
-//const bool BlockO[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 0, 1, 1, 0 },{ 0, 1, 1, 0 },{ 0, 0, 0, 0 }, };
-//const bool BlockS[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 0, 1, 1, 0 },{ 1, 1, 0, 0 },{ 0, 0, 0, 0 }, };
-//const bool BlockT[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 1, 1, 1, 0 },{ 0, 1, 0, 0 },{ 0, 0, 0, 0 }, };
-//const bool BlockZ[4][4] PROGMEM =  { { 0, 0, 0, 0 },{ 1, 1, 0, 0 },{ 0, 1, 1, 0 },{ 0, 0, 0, 0 }, };
-
+const byte BlockI[2] PROGMEM = { 0B01000100, 0B01000100 };
+const byte BlockJ[2] PROGMEM = { 0B11000000, 0B01000100 };
+const byte BlockL[2] PROGMEM = { 0B01100000, 0B01000100 };
+const byte BlockO[2] PROGMEM = { 0B01100000, 0B00000110 };
+const byte BlockS[2] PROGMEM = { 0B11000000, 0B00000110 };
+const byte BlockT[2] PROGMEM = { 0B01000000, 0B00001110 };
+const byte BlockZ[2] PROGMEM = { 0B01100000, 0B00001100 };
 
 // the numbers for score, To do: create letter fonts
 
@@ -378,21 +366,42 @@ void drawTetrisLine(byte x) {
 }
 
 
-void loadPiece(byte peiceNumber, byte row, byte coloum, bool loadScreen) {
+void loadPiece(byte pieceNumber, byte row, byte coloum, bool loadScreen) {
   //load the piece from piece array to screen
   byte pieceRow = 0;
   byte pieceColoum = 0;
   byte c = 0;
 
-  switch (peiceNumber) {
-    case 1: memcpy(currentPiece.umBlock, BlockI, 16); break;
-    case 2: memcpy(currentPiece.umBlock, BlockJ, 16); break;
-    case 3: memcpy(currentPiece.umBlock, BlockL, 16); break;
-    case 4: memcpy(currentPiece.umBlock, BlockO, 16); break;
-    case 5: memcpy(currentPiece.umBlock, BlockS, 16); break;
-    case 6: memcpy(currentPiece.umBlock, BlockT, 16); break;
-    case 7: memcpy(currentPiece.umBlock, BlockZ, 16); break;
+  // load piece from progmem
+  byte byte_in;
+  bool piece_out[4][4];
+  byte piece_bit[2] = {0,0};
+
+  for(int i=0;i<2;i++) {
+    switch (pieceNumber) {
+      case 1: byte_in = pgm_read_byte(&BlockI[i]); break;
+      case 2: byte_in = pgm_read_byte(&BlockJ[i]); break;
+      case 3: byte_in = pgm_read_byte(&BlockL[i]); break;
+      case 4: byte_in = pgm_read_byte(&BlockO[i]); break;
+      case 5: byte_in = pgm_read_byte(&BlockS[i]); break;
+      case 6: byte_in = pgm_read_byte(&BlockT[i]); break;
+      case 7: byte_in = pgm_read_byte(&BlockZ[i]); break;
+    }
+    for( byte mask = 1; mask; mask <<=1) {
+      if(mask & byte_in) {
+        piece_out[piece_bit[0]][piece_bit[1]] = 1;
+      } else {
+        piece_out[piece_bit[0]][piece_bit[1]] = 0;
+      }
+      piece_bit[1]++;
+      if(piece_bit[1]>=4) {
+        piece_bit[1]=0;
+        piece_bit[0]++;
+      }
+    }
   }
+
+  memcpy(currentPiece.umBlock, piece_out, 16); 
 
   currentPiece.Row = row;
   currentPiece.Coloum = coloum;
@@ -743,7 +752,7 @@ bool processKeys() {
 
   int dpadpos = Dpad::getPos();
 
-  Serial.println(dpadpos);
+  //Serial.println(dpadpos);
 
   switch(dpadpos) {
     case KEY_LEFT:
@@ -765,7 +774,7 @@ bool processKeys() {
       movePieceDown();
     break;
     case KEY_ROTATE:
-      if( Dpad::DoDebounce() ) {currentPos
+      if( Dpad::DoDebounce() ) {
         acceleration = Dpad::setAccel(acceleration, rotate);
       }
       RotatePiece();
@@ -886,9 +895,9 @@ void setScore(long score, bool blank) {
 }
 
 
-void setNextBlock(byte peiceNumber) {
+void setNextBlock(byte pieceNumber) {
   memset(nextBlockBuffer, 0, sizeof nextBlockBuffer); //clear buffer
-  switch (peiceNumber) {
+  switch (pieceNumber) {
     case 1:
       //************l piece - 1 *************
       for (int k = 2; k < 6; k++) {

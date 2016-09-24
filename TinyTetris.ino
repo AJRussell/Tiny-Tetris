@@ -35,13 +35,16 @@ Create defines for all the magic numbers but they are useful for now.
 #define OLED_SET_COLUMN             0x21
 #define OLED_SET_PAGE	            0x22
 
-const byte BlockI[2] PROGMEM = { 0B01000100, 0B01000100 };
-const byte BlockJ[2] PROGMEM = { 0B11000000, 0B01000100 };
-const byte BlockL[2] PROGMEM = { 0B01100000, 0B01000100 };
-const byte BlockO[2] PROGMEM = { 0B01100000, 0B00000110 };
-const byte BlockS[2] PROGMEM = { 0B11000000, 0B00000110 };
-const byte BlockT[2] PROGMEM = { 0B01000000, 0B00001110 };
-const byte BlockZ[2] PROGMEM = { 0B01100000, 0B00001100 };
+// the tetris blocks
+const byte Blocks[7][2] PROGMEM = {
+  { 0B01000100, 0B01000100 },
+  { 0B11000000, 0B01000100 },
+  { 0B01100000, 0B01000100 },
+  { 0B01100000, 0B00000110 },
+  { 0B11000000, 0B00000110 },
+  { 0B01000000, 0B00001110 },
+  { 0B01100000, 0B00001100 }
+};
 
 // the numbers for score, To do: create letter fonts
 
@@ -378,15 +381,9 @@ void loadPiece(byte pieceNumber, byte row, byte coloum, bool loadScreen) {
   byte piece_bit[2] = {0,0};
 
   for(int i=0;i<2;i++) {
-    switch (pieceNumber) {
-      case 1: byte_in = pgm_read_byte(&BlockI[i]); break;
-      case 2: byte_in = pgm_read_byte(&BlockJ[i]); break;
-      case 3: byte_in = pgm_read_byte(&BlockL[i]); break;
-      case 4: byte_in = pgm_read_byte(&BlockO[i]); break;
-      case 5: byte_in = pgm_read_byte(&BlockS[i]); break;
-      case 6: byte_in = pgm_read_byte(&BlockT[i]); break;
-      case 7: byte_in = pgm_read_byte(&BlockZ[i]); break;
-    }
+    
+    byte_in = pgm_read_byte(&Blocks[pieceNumber][i]);
+    
     for( byte mask = 1; mask; mask <<=1) {
       if(mask & byte_in) {
         piece_out[piece_bit[0]][piece_bit[1]] = 1;

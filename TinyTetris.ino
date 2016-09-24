@@ -382,7 +382,7 @@ void loadPiece(byte pieceNumber, byte row, byte coloum, bool loadScreen) {
 
   for(int i=0;i<2;i++) {
     
-    byte_in = pgm_read_byte(&Blocks[pieceNumber][i]);
+    byte_in = pgm_read_byte(&Blocks[pieceNumber-1][i]);
     
     for( byte mask = 1; mask; mask <<=1) {
       if(mask & byte_in) {

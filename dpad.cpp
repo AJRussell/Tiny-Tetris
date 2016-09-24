@@ -29,7 +29,7 @@ const int dpad[5][2] = {
   {260, 350}  //KEY_ROTATE 4
 };
 
-static int dpadwarp[5][1] = { 0 };
+static int dpadwarp[5] = { 0,0,0,0,0 };
 static volatile int Debounce = 0;
 static volatile bool processKey = true;
 static volatile int currentPos;
@@ -65,9 +65,9 @@ class Dpad
 
     static int setAccel(int acceleration, int offset) {
       if(processKey) {
-        dpadwarp[currentPos][2] = millis();
+        dpadwarp[currentPos] = millis();
       }
-      if(millis() < dpadwarp[currentPos][3] + offset) {
+      if(millis() < dpadwarp[currentPos] + offset) {
         processKey = false;
       } else {
         processKey = true;

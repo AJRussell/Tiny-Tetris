@@ -82,24 +82,6 @@ const byte NumberFont[10][8] PROGMEM = {
 #define LED_PIN     13
 #define KEYPAD_PIN  A0
 
-/*
-byte uiKeyLeft = 2;
-byte uiKeyRight = 3;
-byte uiKeyDown = 4;
-byte uiKeyRotate = 5;
-*/
-
-//struct for Key press control
-
-/*
-struct keyPress {
-  long left;
-  long right;
-  long down;
-  long rotate;
-};*/
-
-
 //struct for pieces
 
 struct PieceSpace {
@@ -131,23 +113,7 @@ int level = 0;
 int levellineCount = 0;
 int dropDelay = 1000;
 
-//long keytimer = 0;
-//bool processKey = true;
-//int Debounce = 0;
-//int DebounceMax = 10;
-
-// put your resistor calibration values here
-/*
-int dpad[5][2] = {
-  {460, 480}, //KEY_MIDDLE 0
-  {122, 234}, //KEY_LEFT 1
-  {700, 750}, //KEY_RIGHT 2
-  {-1,   70}, //KEY_DOWN 3
-  {260, 350}  //KEY_ROTATE 4
-};
-*/
 int lastKey = 0;
-
 
 // I2C
 
@@ -769,15 +735,11 @@ void tetrisScreenToSerial() {
 
 
 bool processKeys() {
-  // not happy with this, To do: sort this out and get the movment right!
-  // B = 450-461
 
-  //char uiKeyCode = 0;
   bool keypressed = true;
   int leftRight = 300 - acceleration;
   int rotate = 700;
   int down = 110 - acceleration;
-  int analogKey = analogRead(KEYPAD_PIN);
 
   int dpadpos = Dpad::getPos();
 
@@ -803,7 +765,7 @@ bool processKeys() {
       movePieceDown();
     break;
     case KEY_ROTATE:
-      if( Dpad::DoDebounce() ) {
+      if( Dpad::DoDebounce() ) {currentPos
         acceleration = Dpad::setAccel(acceleration, rotate);
       }
       RotatePiece();

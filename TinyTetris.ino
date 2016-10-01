@@ -63,6 +63,113 @@ const byte NumberFont[10][8] PROGMEM = {
 };
 
 
+
+  // "Tiny Tetris" upside-down text binarized from http://www.dcode.fr/binary-image
+const byte welcomeScreen[16][5] PROGMEM = {
+    B01110011, B10100010, B00100011, B11100010, B00000000,
+    B10001001, B00100010, B00100000, B00100010, B00000000,
+    B10000001, B00100010, B00100000, B00100010, B00000000,
+    B01110001, B00011110, B00100001, B11100010, B00000000,
+    B00001001, B00100010, B00100000, B00100010, B00000000,
+    B10001001, B00100010, B00100000, B00100010, B00000000,
+    B01110011, B10011110, B11111011, B11101111, B10000000,
+    B00000000, B00000000, B00000000, B00000000, B00000000,
+    B00000000, B00000000, B00000000, B00000000, B00000000,
+    B00000000, B10001000, B10111000, B10000000, B00000000,
+    B00000000, B10001100, B10010000, B10000000, B00000000,
+    B00000000, B10001100, B10010000, B10000000, B00000000,
+    B00000001, B01001010, B10010000, B10000000, B00000000,
+    B00000010, B00101001, B10010000, B10000000, B00000000,
+    B00000010, B00101001, B10010000, B10000000, B00000000,
+    B00000010, B00101000, B10111011, B11100000, B00000000
+    
+};
+
+// Tetris Illustration upside-down image binarized from http://www.dcode.fr/binary-image
+const byte tetrisLogo[40][8] PROGMEM =  {
+    B11111111, B11111111, B11111111, B11111111, B11111111, B11111111, B11111111, B11111111,
+    B11101101, B10111111, B11111111, B11111111, B11111111, B01111111, B11111001, B11100111,
+    B11101101, B00110100, B11111111, B11111111, B11111110, B01110011, B11110001, B11100111,
+    B10111000, B01010101, B11111111, B11111111, B11111000, B01110011, B11100001, B11100111,
+    B10011110, B10110011, B10110011, B11100011, B11100100, B00100011, B11100011, B11110011,
+    B10001111, B00010011, B00110001, B11110001, B11110100, B00100011, B11100011, B11110011,
+    B10001111, B00000111, B01110001, B11110000, B11110010, B00110011, B11100011, B11110001,
+    B10001111, B00000110, B01100001, B11111000, B11111010, B00000001, B11000001, B11100001,
+    B10000110, B00001110, B11100000, B11111000, B01111001, B00000001, B11000000, B11000001,
+    B10000110, B00001100, B11100000, B11111100, B01111001, B00000001, B11000000, B00000001,
+    B10000110, B00001100, B11110000, B11111100, B01111001, B00000000, B10000000, B00000001,
+    B10000110, B00001100, B11110000, B01111100, B01111001, B00000000, B10000000, B00000001,
+    B10000110, B00000110, B11110000, B01111100, B01111001, B00000000, B10000000, B00000001,
+    B10000110, B00000111, B01111000, B01111000, B01110010, B00000000, B10000000, B00000001,
+    B10001101, B00000011, B00111000, B01111000, B01110010, B00000000, B00000000, B00000001,
+    B10011001, B10000011, B10111000, B01111000, B11110100, B00000000, B00000000, B00000001,
+    B10011001, B10000001, B10011100, B01110001, B11101100, B00000000, B00000000, B00000001,
+    B10001001, B00000000, B11111100, B01110001, B11011000, B00000000, B00000000, B00000001,
+    B10001011, B00000000, B01111100, B01100011, B10110000, B00000000, B00000000, B00000001,
+    B10000110, B00000000, B00110100, B11100111, B01100000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00011110, B11100110, B01000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00001110, B11001100, B10000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000110, B11011011, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000111, B11010010, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000011, B10100100, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000001, B11111000, B00000000, B00000000, B00110000, B00000001,
+    B10000000, B00000000, B00000000, B11110000, B00000000, B00000000, B00110000, B00000001,
+    B10000000, B00000000, B00000000, B11010000, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000000, B01110000, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B10000000, B01100000, B00000000, B00000000, B00000000, B00000001,
+    B10000011, B00000000, B00000000, B01100000, B00000000, B00000000, B00000000, B00000001,
+    B10000011, B00000000, B00000000, B01100000, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000000, B01100000, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000000, B01100000, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000000, B11110000, B00000000, B00000000, B00000000, B00010001,
+    B10000000, B00000000, B00000000, B11001000, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000001, B10001000, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000001, B10001000, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000000, B10010000, B00000000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000000, B11110000, B00001000, B00000000, B00000000, B00000001
+};
+
+// Tetris Brick upside-down image binarized from http://www.dcode.fr/binary-image
+const byte brickLogo[36][8] PROGMEM= {
+    B10000000, B00000000, B00000000, B00000000, B00000000, B11111111, B11111100, B00000001,
+    B10000000, B00000111, B11111100, B11111111, B11111110, B11111111, B11111100, B00000001,
+    B10000011, B11111111, B11111110, B11111111, B11111111, B01111111, B11111110, B00000001,
+    B10000011, B11111111, B11111110, B01111111, B11111111, B00111111, B11111111, B00000001,
+    B10000011, B11111111, B11111111, B01111111, B11111111, B10111111, B11111111, B10000001,
+    B10001001, B11111111, B11111111, B00111111, B11111111, B10011111, B11111111, B10000001,
+    B10001101, B11111111, B11111111, B10111111, B11111111, B11001111, B11111111, B11000001,
+    B10001101, B11111111, B11111111, B10011111, B11111111, B11101111, B11111111, B11100001,
+    B10001100, B11111111, B11111111, B11011111, B11111111, B11100111, B11111111, B11110001,
+    B10001110, B11111111, B11111111, B11001111, B11111111, B11110111, B11111111, B11110001,
+    B10001110, B11111111, B11111111, B11101111, B11111111, B11111011, B11111111, B00000001,
+    B10001110, B01111111, B11111111, B11101111, B11111111, B11100000, B00000000, B00010001,
+    B10001111, B01111111, B11111111, B11100100, B00000000, B00000001, B11111111, B11110001,
+    B10001111, B00111111, B10000000, B00000000, B00111111, B11111011, B11111111, B11110001,
+    B10011111, B00000000, B00000111, B11110111, B11111111, B11110011, B11111111, B11100001,
+    B10001111, B00111111, B11111111, B11100111, B11111111, B11110111, B11111111, B11000001,
+    B10001111, B00111111, B11111111, B11101111, B11111111, B11100111, B11111111, B11000001,
+    B10001111, B01111111, B11111111, B11101111, B11111111, B11101111, B11111111, B10000001,
+    B10001111, B01111111, B11111111, B11001111, B11111111, B11001111, B11111111, B10000001,
+    B10000111, B01111111, B11111111, B11011111, B11111111, B11011111, B11111111, B00000001,
+    B10000110, B01111111, B11111111, B11011111, B11111111, B11011111, B11111111, B00000001,
+    B10000110, B01111111, B11111111, B10011111, B11111111, B10111111, B11111110, B00000001,
+    B10000010, B11111111, B11111111, B10111111, B11111111, B10111111, B11111000, B00000001,
+    B10000010, B11111111, B11111111, B10111111, B11111111, B00110000, B00000000, B00000001,
+    B10000010, B11111111, B11111111, B00111111, B11100000, B00000000, B00000000, B00000001,
+    B10000000, B11111111, B11111111, B00000000, B00000110, B00000000, B00000000, B00000001,
+    B10000000, B11111111, B11000000, B00000111, B11111110, B00000000, B00000000, B00000001,
+    B10000000, B10000000, B00001110, B01111111, B11111100, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00111110, B11111111, B11111100, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00011110, B11111111, B11111100, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00011100, B11111111, B11111000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00011101, B11111111, B11111000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00001101, B11111111, B11110000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00001001, B11111111, B11110000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000011, B11111111, B11100000, B00000000, B00000000, B00000001,
+    B10000000, B00000000, B00000011, B11110000, B00000000, B00000000, B00000000, B00000001
+};
+
+
 #define KEY_MIDDLE  0
 #define KEY_LEFT    1
 #define KEY_RIGHT   2
@@ -115,6 +222,7 @@ void OLEDCommand(byte command) {
   Wire.endTransmission();
 }
 
+
 void OLEDData(byte data) {
   Wire.beginTransmission(OLED_ADDRESS);
   Wire.write(OLED_DATA);
@@ -160,12 +268,6 @@ void setup() {
 }
 
 
-ISR(TIMER1_COMPA_vect) {
-  // sequencer plays tetris theme
-  TetrisTheme::tetrisThemePlay();
-}
-
-
 void fillTetrisArray(byte value) {
   for (char r = 0; r < 24; r++) {
     for (char c = 0; c < 14; c++) {
@@ -205,6 +307,74 @@ void drawTetrisScreen() {
       }
     }
   }
+}
+
+
+void drawTetrisTitle(bool blank = false) {
+  byte byteval;
+  
+  //set Vertical addressing mode and column - page start end
+  OLEDCommand(OLED_SET_ADDRESSING);
+  OLEDCommand(OLED_VERTICAL_ADDRESSING);
+
+  OLEDCommand(OLED_SET_COLUMN);
+  OLEDCommand( 50 );                //Set column start
+  OLEDCommand( 66 );              //Set column end
+
+  OLEDCommand(OLED_SET_PAGE);
+  OLEDCommand( 1 );               //Set page start
+  OLEDCommand( 5 );               //Set page end
+
+  for (int r = 0; r <16; r++) {
+    for (int c = 4; c >=0; c--) {
+      if(blank) {
+        OLEDData(0);
+      }else {
+        byteval = pgm_read_byte(&welcomeScreen[r][c]);
+        OLEDData(byteval);
+      }
+    }
+  }
+
+  OLEDCommand(OLED_SET_COLUMN);
+  OLEDCommand( 1 );                //Set column start
+  OLEDCommand( 42 );              //Set column end
+
+  OLEDCommand(OLED_SET_PAGE);
+  OLEDCommand( 0 );               //Set page start
+  OLEDCommand( 7 );               //Set page end
+
+  for (int r = 0; r <40; r++) {
+    for (int c = 7; c >=0; c--) {
+      if(blank) {
+        OLEDData(0);
+      }else {
+        byteval = pgm_read_byte(&tetrisLogo[r][c]);
+        OLEDData(byteval);
+      }
+    }
+  }
+
+  OLEDCommand(OLED_SET_COLUMN);
+  OLEDCommand( 75 );                //Set column start
+  OLEDCommand( 116 );              //Set column end
+
+  OLEDCommand(OLED_SET_PAGE);
+  OLEDCommand( 0 );               //Set page start
+  OLEDCommand( 7 );               //Set page end
+
+  for (int r = 0; r <36; r++) {
+    for (int c = 7; c >=0; c--) {
+      if(blank) {
+        OLEDData(0);
+      }else {
+        byteval = pgm_read_byte(&brickLogo[r][c]);
+        OLEDData(byteval);
+      }
+    }
+  }
+  //brickLogo[36][8]
+  
 }
 
 
@@ -547,7 +717,7 @@ bool movePieceDown() {
       acceleration = 0;//reset acceleration as there is a new piece
     }
 
-    nextPiece = random(1, 7);
+    nextPiece = random(1, 8);
     setNextBlock(nextPiece);
   }
 }
@@ -793,86 +963,30 @@ bool processKeys() {
 
 void setScore(long score, bool blank) {
   // this is a kludge. To do: create a proper system for rendering numbers and letters.
-  long ones = (score % 10);
-  long tens = ((score / 10) % 10);
-  long hundreds = ((score / 100) % 10);
-  long thousands = ((score / 1000) % 10);
-  long tenthousands = ((score / 10000) % 10);
-  long hunderedthousands = ((score / 100000) % 10);
+  long powersOfTen[6] = {
+    (score % 10),
+    ((score / 10) % 10),
+    ((score / 100) % 10),
+    ((score / 1000) % 10),
+    ((score / 10000) % 10),
+    ((score / 100000) % 10)
+  };
 
   //create the score in upper left part of the screen
   byte font = 0;
   char bytes_out[8];
   memset(scoreDisplayBuffer, 0, sizeof scoreDisplayBuffer);
 
-  //****************score digit 6****************
-  for (int v = 0; v < 8; v++) {
-    bytes_out[v] = pgm_read_byte(&NumberFont[hunderedthousands][v]);
+  for(byte powIndex=0;powIndex<6;powIndex++) {
+    for (int v = 0; v < 8; v++) {
+      bytes_out[v] = pgm_read_byte(&NumberFont[powersOfTen[powIndex]][v]);
+    }
+    //write the number to the Score buffer
+    for (int i = 0; i < 8; i++) {
+      scoreDisplayBuffer[i][powIndex] = scoreDisplayBuffer[i][powIndex] | bytes_out[i] >> 1;
+    }
   }
-  //write the number to the Score buffer
-  for (int i = 0; i < 8; i++) {
-    scoreDisplayBuffer[i][0] = scoreDisplayBuffer[i][0] | bytes_out[i] >> 1;
-  }
-  //****************score digit 5****************
-  for (int v = 0; v < 8; v++) {
-    bytes_out[v] = pgm_read_byte(&NumberFont[tenthousands][v]);
-  }
-  //write the number to the Score buffer
-  for (int i = 0; i < 8; i++) {
-    scoreDisplayBuffer[i][0] = scoreDisplayBuffer[i][0] | (bytes_out[i] << 6);
-  }
-  //write the number to the Score buffer
-  for (int i = 0; i < 8; i++) {
-    scoreDisplayBuffer[i][1] = scoreDisplayBuffer[i][1] | bytes_out[i] >> 1;
-  }
-  //****************score digit 4****************
-  for (int v = 0; v < 8; v++) {
-    bytes_out[v] = pgm_read_byte(&NumberFont[thousands][v]);
-  }
-  //write the number to the Score buffer
-  for (int i = 0; i < 8; i++) {
-    scoreDisplayBuffer[i][1] = scoreDisplayBuffer[i][1] | (bytes_out[i] << 6);
-  }
-  //write the number to the Score buffer
-  for (int i = 0; i < 8; i++) {
-    scoreDisplayBuffer[i][2] = scoreDisplayBuffer[i][2] | bytes_out[i] >> 1;
-  }
-  //****************score digit 3****************
-  for (int v = 0; v < 8; v++) {
-    bytes_out[v] = pgm_read_byte(&NumberFont[hundreds][v]);
-  }
-  //write the number to the Score buffer
-  for (int i = 0; i < 8; i++) {
-    scoreDisplayBuffer[i][2] = scoreDisplayBuffer[i][2] | (bytes_out[i] << 6);
-  }
-  //write the number to the Score buffer
-  for (int i = 0; i < 8; i++) {
-    scoreDisplayBuffer[i][3] = scoreDisplayBuffer[i][3] | bytes_out[i] >> 1;
-  }
-  //****************score digit 2****************
-  for (int v = 0; v < 8; v++) {
-    bytes_out[v] = pgm_read_byte(&NumberFont[tens][v]);
-  }
-  //write the number to the Score buffer
-  for (int i = 0; i < 8; i++) {
-    scoreDisplayBuffer[i][3] = scoreDisplayBuffer[i][3] | (bytes_out[i] << 6);
-  }
-  //write the number to the Score buffer
-  for (int i = 0; i < 8; i++) {
-    scoreDisplayBuffer[i][4] = scoreDisplayBuffer[i][4] | bytes_out[i] >> 1;
-  }
-  //****************score digit 1****************
-  for (int v = 0; v < 8; v++) {
-    bytes_out[v] = pgm_read_byte(&NumberFont[ones][v]);
-  }
-  //write the number to the Score buffer
-  for (int i = 0; i < 8; i++) {
-    scoreDisplayBuffer[i][4] = scoreDisplayBuffer[i][4] | (bytes_out[i] << 6);
-  }
-  //write the number to the Score buffer
-  for (int i = 0; i < 8; i++) {
-    scoreDisplayBuffer[i][5] = scoreDisplayBuffer[i][5] | bytes_out[i] >> 1;
-  }
+  
   //set Vertical addressing mode and column - page start end
   OLEDCommand(OLED_SET_ADDRESSING);
   OLEDCommand(OLED_VERTICAL_ADDRESSING);
@@ -1053,9 +1167,9 @@ void loop() {
   delay(200);
   OLEDCommand(OLED_NORMAL_DISPLAY);
 
-  loadPiece(random(1, 7), 20, 5, true);
+  loadPiece(random(1, 8), 20, 5, true);
   drawTetrisScreen();
-  nextPiece = random(1, 7);
+  nextPiece = random(1, 8);
   setNextBlock(nextPiece);
 
   setScore(0, false);
@@ -1065,10 +1179,21 @@ void loop() {
   setScore(0, false);
   byte rnd = 0;
 
+  drawTetrisTitle(false);
+
   TetrisTheme::start();
-  while(songOn);
-  TetrisTheme::stop();
-  songOn = false;
+  while(songOn) TetrisTheme::tetrisThemePlay();
+
+  drawTetrisTitle(true);
+  drawSides();
+  drawBottom();
+  setScore(0, false);
+
+  for(int i=1;i<10;i++) {
+    nextPiece = random(1, 8);
+    setNextBlock(nextPiece);
+    delay(100);
+  }
 
   while (!gameOver) {
     movePieceDown();

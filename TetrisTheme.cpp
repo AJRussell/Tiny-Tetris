@@ -137,9 +137,8 @@
 // Time (in microseconds) to spend on each note while simulating polyphony
 // If this is too small, low frequency notes will be inaudible.
 #define POLY_DELTA (14400)
- 
 
-static const float lead_notes[] = {
+static const float lead_notes[] PROGMEM = {
   // part 1
   _E5, _B4, _C5, _D5, _C5, _B4, _A4, _A4, _C5, _E5, _D5, _C5, _B4, _B4, _C5, _D5, _E5, _C5, _A4, _A4, _R,
   _D5, _F5, _A5, _G5, _F5, _E5, _C5, _E5, _D5, _C5, _B4, _B4, _C5, _D5, _E5, _C5, _A4, _A4, _R,
@@ -150,7 +149,7 @@ static const float lead_notes[] = {
 
 };
 
-static const float lead_times[] = {
+static const float lead_times[] PROGMEM = {
   // part 1
   1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
   1.5, 0.5, 1.0, 0.5, 0.5, 1.5, 0.5, 1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
@@ -161,7 +160,7 @@ static const float lead_times[] = {
 
 };
 
-static const float bass_notes[] = {
+static const float bass_notes[] PROGMEM = {
   // part 1
   _E2, _E3, _E2, _E3, _E2, _E3, _E2, _E3, _A1, _A2, _A1, _A2, _A1, _A2, _A1, _A2, _GS1, _GS2, _GS1, _GS2, _GS1, _GS2, _GS1, _GS2, _A1, _A2, _A1, _A2, _A1, _B2, _C3, _E3,
   _D2, _D3, _D2, _D3, _D2, _D3, _D2, _D3, _C2, _C3, _C2, _C3, _C2, _C3, _C2, _C3, _B1, _B2, _B1, _B2, _B1, _B2, _B1, _B2, _A1, _A2, _A1, _A2, _A1, _A2, _A1, _A2,
@@ -169,8 +168,6 @@ static const float bass_notes[] = {
   // part 2
   _A1, _E2, _A1, _E2, _A1, _E2, _A1, _E2, _GS1, _E2, _GS1, _E2, _GS1, _E2, _GS1, _E2, _A1, _E2, _A1, _E2, _A1, _E2, _A1, _E2, _GS1, _E2, _GS1, _E2, _GS1, _E2, _GS1, _E2,
   _A1, _E2, _A1, _E2, _A1, _E2, _A1, _E2, _GS1, _E2, _GS1, _E2, _GS1, _E2, _GS1, _E2, _A1, _E2, _A1, _E2, _A1, _E2, _A1, _E2, _GS1, _E2, _GS1, _E2, _GS1, _E2, _GS1, _E2
-
-
 };
 /*
 // all values are 0.5 so let's hardcode it and save some memory
@@ -222,14 +219,14 @@ class TetrisTheme {
       
       int curr_lead_note = 0;
       int curr_bass_note = 0;
-      float curr_lead_note_time_remaining = lead_times[curr_lead_note];
+      float curr_lead_note_time_remaining = pgm_read_float(&lead_times[curr_lead_note]);
       float curr_bass_note_time_remaining = 0.5;// bass_times[curr_bass_note]; // hardcoded
       float lead_freq, bass_freq, note_value;
       unsigned long duration;
     
       while (curr_lead_note < lead_note_count && curr_bass_note < bass_note_count && songOn) {
-        lead_freq = lead_notes[curr_lead_note];
-        bass_freq = bass_notes[curr_bass_note];
+        lead_freq = pgm_read_float(&lead_notes[curr_lead_note]);
+        bass_freq = pgm_read_float(&bass_notes[curr_bass_note]);
         note_value = min(curr_lead_note_time_remaining, curr_bass_note_time_remaining);
         duration = note_value * 1000000 * (60.0/BPM);
     
@@ -247,7 +244,7 @@ class TetrisTheme {
         curr_lead_note_time_remaining -= note_value;
         if (curr_lead_note_time_remaining < 0.001) {
           curr_lead_note++;
-          curr_lead_note_time_remaining = lead_times[curr_lead_note];
+          curr_lead_note_time_remaining = pgm_read_float(&lead_times[curr_lead_note]);
         }
     
         // Advance bass note

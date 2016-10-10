@@ -10,7 +10,7 @@ Special thanks to tobozo who:
 
 Added sound and music
 Art work for title screen
-Bug fixed and lots of other things.
+Bug fixes and lots of other things.
 
 https://github.com/tobozo
 

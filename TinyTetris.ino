@@ -5,11 +5,19 @@ Copyright (C) 2016 Anthony Russell
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
   version 2.1 of the License, or (at your option) any later version.
+
+Special thanks to tobozo who:
+
+Added sound and music
+Art work for title screen
+Bug fixed and lots of other things.
+
+https://github.com/tobozo
+
+
 To do:
 High score functionality.
-[done] Better key pad control code.
 Decent random number generator.
-[done] Start thinking about adding sound.
 Create a letter font, create a proper system for rendering numbers and letters.
 [more to do] Tidy up code and optimize for memory, sort out the globals and types.
 Create defines for all the magic numbers but they are useful for now.

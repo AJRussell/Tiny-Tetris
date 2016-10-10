@@ -961,48 +961,140 @@ bool processKeys() {
 }
 
 
-void setScore(long score, bool blank) {
-  // this is a kludge. To do: create a proper system for rendering numbers and letters.
-  long powersOfTen[6] = {
-    (score % 10),
-    ((score / 10) % 10),
-    ((score / 100) % 10),
-    ((score / 1000) % 10),
-    ((score / 10000) % 10),
-    ((score / 100000) % 10)
-  };
+void setScore(long score, bool blank)
 
-  //create the score in upper left part of the screen
-  byte font = 0;
-  char bytes_out[8];
-  memset(scoreDisplayBuffer, 0, sizeof scoreDisplayBuffer);
+{
+	// this is a kludge. To do: create a proper system for rendering numbers and letters.
+	
+	
+	long ones = (score % 10);
+	long tens = ((score / 10) % 10);
+	long hundreds = ((score / 100) % 10);
+	long thousands = ((score / 1000) % 10);
+	long tenthousands = ((score / 10000) % 10);
+	long hunderedthousands = ((score / 100000) % 10);
 
-  for(byte powIndex=0;powIndex<6;powIndex++) {
-    for (int v = 0; v < 8; v++) {
-      bytes_out[v] = pgm_read_byte(&NumberFont[powersOfTen[powIndex]][v]);
-    }
-    //write the number to the Score buffer
-    for (int i = 0; i < 8; i++) {
-      scoreDisplayBuffer[i][powIndex] = scoreDisplayBuffer[i][powIndex] | bytes_out[i] >> 1;
-    }
-  }
-  
-  //set Vertical addressing mode and column - page start end
-  OLEDCommand(OLED_SET_ADDRESSING);
-  OLEDCommand(OLED_VERTICAL_ADDRESSING);
-  OLEDCommand(OLED_SET_COLUMN);
-  OLEDCommand(120);                 //Set column start
-  OLEDCommand(127);                 //Set column end
-  OLEDCommand(OLED_SET_PAGE);
-  OLEDCommand(0);                  //Set page start
-  OLEDCommand(5);                  //Set page end
 
-  for (int p = 0; p < 8; p++) {
-    for (int c = 0; c < 6; c++) {
-      if (blank) OLEDData(0);
-      else OLEDData(scoreDisplayBuffer[p][c]);
-    }
-  }
+	//create the score in upper left part of the screen
+	byte font = 0;
+	char bytes_out[8];
+	memset(scoreDisplayBuffer, 0, sizeof scoreDisplayBuffer);
+
+	//****************score digit 6****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[hunderedthousands][v]);
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][0] = scoreDisplayBuffer[i][0] | bytes_out[i] >> 1;
+	}
+
+	//****************score digit 5****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[tenthousands][v]);
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][0] = scoreDisplayBuffer[i][0] | (bytes_out[i] << 6);
+	}
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][1] = scoreDisplayBuffer[i][1] | bytes_out[i] >> 1;
+	}
+
+	//****************score digit 4****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[thousands][v]);
+
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][1] = scoreDisplayBuffer[i][1] | (bytes_out[i] << 6);
+	}
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][2] = scoreDisplayBuffer[i][2] | bytes_out[i] >> 1;
+	}
+
+	//****************score digit 3****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[hundreds][v]);
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][2] = scoreDisplayBuffer[i][2] | (bytes_out[i] << 6);
+	}
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][3] = scoreDisplayBuffer[i][3] | bytes_out[i] >> 1;
+	}
+
+
+	//****************score digit 2****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[tens][v]);
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][3] = scoreDisplayBuffer[i][3] | (bytes_out[i] << 6);
+	}
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][4] = scoreDisplayBuffer[i][4] | bytes_out[i] >> 1;
+	}
+
+
+	//****************score digit 1****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[ones][v]);
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][4] = scoreDisplayBuffer[i][4] | (bytes_out[i] << 6);
+	}
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][5] = scoreDisplayBuffer[i][5] | bytes_out[i] >> 1;
+
+	}
+
+	//set Vertical addressing mode and column - page start end
+	OLEDCommand(OLED_SET_ADDRESSING);
+	OLEDCommand(OLED_VERTICAL_ADDRESSING);
+
+	OLEDCommand(OLED_SET_COLUMN);
+	OLEDCommand(120);                 //Set column start
+	OLEDCommand(127);                 //Set column end
+
+	OLEDCommand(OLED_SET_PAGE);
+	OLEDCommand(0);                  //Set page start
+	OLEDCommand(5);                  //Set page end
+
+	for (int p = 0; p < 8; p++)
+	{
+		for (int c = 0; c <6; c++)
+		{
+			if (blank) OLEDData(0);
+			else OLEDData(scoreDisplayBuffer[p][c]);
+		}
+
+	}
 }
 
 

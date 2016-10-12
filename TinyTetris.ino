@@ -846,11 +846,11 @@ void processCompletedLines() {
       clearedLines--;
       drawTetrisScreen();
       tone(PIEZO_PIN, 1000, 50);
-      delay(100);
+      delay(60);
       tone(PIEZO_PIN, 2000, 50);
-      delay(100);
+      delay(50);
       tone(PIEZO_PIN, 500, 50);
-      delay(100);
+      delay(60);
     }
   }
 

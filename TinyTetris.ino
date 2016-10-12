@@ -1,19 +1,15 @@
-/*  Tiny Tetris 
- V0.91                                     
+/* Tiny Tetris V0.94 
+                                    
 Copyright (C) 2016 Anthony Russell
-  This program is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
 
-Special thanks to tobozo who:
-
+Special thanks to tobozo -https://github.com/tobozo - who:
 Added sound and music
 Art work for title screen
 Bug fixes and lots of other things.
-
-https://github.com/tobozo
-
 
 To do:
 High score functionality.
@@ -29,19 +25,19 @@ Create defines for all the magic numbers but they are useful for now.
 #include "dpad.cpp"
 
 #define OLED_ADDRESS	        	0x3C //you may need to change this, this is the OLED I2C address.  
-#define OLED_COMMAND	            0x80
+#define OLED_COMMAND	                0x80
 #define OLED_DATA	                0x40
 #define OLED_DISPLAY_OFF	        0xAE
-#define OLED_DISPLAY_ON	            0xAF
+#define OLED_DISPLAY_ON	                0xAF
 #define OLED_NORMAL_DISPLAY	    	0xA6
 #define OLED_INVERSE_DISPLAY     	0xA7
 #define OLED_SET_BRIGHTNESS	        0x81
 #define OLED_SET_ADDRESSING	        0x20
 #define OLED_HORIZONTAL_ADDRESSING	0x00
 #define OLED_VERTICAL_ADDRESSING	0x01
-#define OLED_PAGE_ADDRESSING	    0x02
-#define OLED_SET_COLUMN             0x21
-#define OLED_SET_PAGE	            0x22
+#define OLED_PAGE_ADDRESSING	        0x02
+#define OLED_SET_COLUMN                 0x21
+#define OLED_SET_PAGE	                0x22
 
 // the tetris blocks
 const byte Blocks[7][2] PROGMEM = {

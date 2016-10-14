@@ -8,6 +8,7 @@ version 2.1 of the License, or (at your option) any later version.
 
 Special thanks to tobozo -https://github.com/tobozo - who:
 Added sound and music
+Created Dpad.cpp for much better control interface.
 Art work for title screen
 Bug fixes and lots of other things.
 

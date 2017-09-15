@@ -42,6 +42,10 @@ class Dpad
   
   public:
 
+    static void init() {
+      // for compat
+    }
+
     static int getPos() {
       
       currentPos = getPosition(KEYPAD_PIN)*1;

@@ -1,15 +1,20 @@
-/*  Tiny Tetris 
- V0.91                                     
+/* Tiny Tetris V0.94 
+                                    
 Copyright (C) 2016 Anthony Russell
-  This program is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+Special thanks to tobozo -https://github.com/tobozo - who:
+Added sound and music
+Created Dpad.cpp for much better control interface.
+Art work for title screen
+Bug fixes and lots of other things.
+
 To do:
 High score functionality.
-[done] Better key pad control code.
 Decent random number generator.
-[done] Start thinking about adding sound.
 Create a letter font, create a proper system for rendering numbers and letters.
 [more to do] Tidy up code and optimize for memory, sort out the globals and types.
 Create defines for all the magic numbers but they are useful for now.
@@ -17,23 +22,32 @@ Create defines for all the magic numbers but they are useful for now.
 */
 
 #include <Wire.h>
+/* comment out *one* of the following to enable dpad, dpad 5 wires, or rotary controls */
+//#include "dpad.cpp"
+//#include "dpad.5wires.cpp"
+#include "rotary.cpp"
+
 #include "TetrisTheme.cpp"
-#include "dpad.cpp"
+
+#ifdef ROTARYCPP
+#include <ClickEncoder.h> // https://github.com/0xPIT/encoder also available in the Library Manager
+#include <TimerOne.h> // https://github.com/PaulStoffregen/TimerOne also available in the Library Manager
+#endif
 
 #define OLED_ADDRESS	        	0x3C //you may need to change this, this is the OLED I2C address.  
-#define OLED_COMMAND	            0x80
+#define OLED_COMMAND	                0x80
 #define OLED_DATA	                0x40
 #define OLED_DISPLAY_OFF	        0xAE
-#define OLED_DISPLAY_ON	            0xAF
+#define OLED_DISPLAY_ON	                0xAF
 #define OLED_NORMAL_DISPLAY	    	0xA6
 #define OLED_INVERSE_DISPLAY     	0xA7
 #define OLED_SET_BRIGHTNESS	        0x81
 #define OLED_SET_ADDRESSING	        0x20
 #define OLED_HORIZONTAL_ADDRESSING	0x00
 #define OLED_VERTICAL_ADDRESSING	0x01
-#define OLED_PAGE_ADDRESSING	    0x02
-#define OLED_SET_COLUMN             0x21
-#define OLED_SET_PAGE	            0x22
+#define OLED_PAGE_ADDRESSING	        0x02
+#define OLED_SET_COLUMN                 0x21
+#define OLED_SET_PAGE	                0x22
 
 // the tetris blocks
 const byte Blocks[7][2] PROGMEM = {
@@ -254,6 +268,8 @@ void setup() {
   OLEDCommand(OLED_NORMAL_DISPLAY);
 
   fillTetrisScreen(0);
+
+  Dpad::init();
 
   randomSeed(analogRead(7)); /// To do: create a decent random number generator.
 
@@ -838,11 +854,11 @@ void processCompletedLines() {
       clearedLines--;
       drawTetrisScreen();
       tone(PIEZO_PIN, 1000, 50);
-      delay(100);
+      delay(60);
       tone(PIEZO_PIN, 2000, 50);
-      delay(100);
+      delay(50);
       tone(PIEZO_PIN, 500, 50);
-      delay(100);
+      delay(60);
     }
   }
 
@@ -961,48 +977,140 @@ bool processKeys() {
 }
 
 
-void setScore(long score, bool blank) {
-  // this is a kludge. To do: create a proper system for rendering numbers and letters.
-  long powersOfTen[6] = {
-    (score % 10),
-    ((score / 10) % 10),
-    ((score / 100) % 10),
-    ((score / 1000) % 10),
-    ((score / 10000) % 10),
-    ((score / 100000) % 10)
-  };
+void setScore(long score, bool blank)
 
-  //create the score in upper left part of the screen
-  byte font = 0;
-  char bytes_out[8];
-  memset(scoreDisplayBuffer, 0, sizeof scoreDisplayBuffer);
+{
+	// this is a kludge. To do: create a proper system for rendering numbers and letters.
+	
+	
+	long ones = (score % 10);
+	long tens = ((score / 10) % 10);
+	long hundreds = ((score / 100) % 10);
+	long thousands = ((score / 1000) % 10);
+	long tenthousands = ((score / 10000) % 10);
+	long hunderedthousands = ((score / 100000) % 10);
 
-  for(byte powIndex=0;powIndex<6;powIndex++) {
-    for (int v = 0; v < 8; v++) {
-      bytes_out[v] = pgm_read_byte(&NumberFont[powersOfTen[powIndex]][v]);
-    }
-    //write the number to the Score buffer
-    for (int i = 0; i < 8; i++) {
-      scoreDisplayBuffer[i][powIndex] = scoreDisplayBuffer[i][powIndex] | bytes_out[i] >> 1;
-    }
-  }
-  
-  //set Vertical addressing mode and column - page start end
-  OLEDCommand(OLED_SET_ADDRESSING);
-  OLEDCommand(OLED_VERTICAL_ADDRESSING);
-  OLEDCommand(OLED_SET_COLUMN);
-  OLEDCommand(120);                 //Set column start
-  OLEDCommand(127);                 //Set column end
-  OLEDCommand(OLED_SET_PAGE);
-  OLEDCommand(0);                  //Set page start
-  OLEDCommand(5);                  //Set page end
 
-  for (int p = 0; p < 8; p++) {
-    for (int c = 0; c < 6; c++) {
-      if (blank) OLEDData(0);
-      else OLEDData(scoreDisplayBuffer[p][c]);
-    }
-  }
+	//create the score in upper left part of the screen
+	byte font = 0;
+	char bytes_out[8];
+	memset(scoreDisplayBuffer, 0, sizeof scoreDisplayBuffer);
+
+	//****************score digit 6****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[hunderedthousands][v]);
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][0] = scoreDisplayBuffer[i][0] | bytes_out[i] >> 1;
+	}
+
+	//****************score digit 5****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[tenthousands][v]);
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][0] = scoreDisplayBuffer[i][0] | (bytes_out[i] << 6);
+	}
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][1] = scoreDisplayBuffer[i][1] | bytes_out[i] >> 1;
+	}
+
+	//****************score digit 4****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[thousands][v]);
+
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][1] = scoreDisplayBuffer[i][1] | (bytes_out[i] << 6);
+	}
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][2] = scoreDisplayBuffer[i][2] | bytes_out[i] >> 1;
+	}
+
+	//****************score digit 3****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[hundreds][v]);
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][2] = scoreDisplayBuffer[i][2] | (bytes_out[i] << 6);
+	}
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][3] = scoreDisplayBuffer[i][3] | bytes_out[i] >> 1;
+	}
+
+
+	//****************score digit 2****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[tens][v]);
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][3] = scoreDisplayBuffer[i][3] | (bytes_out[i] << 6);
+	}
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][4] = scoreDisplayBuffer[i][4] | bytes_out[i] >> 1;
+	}
+
+
+	//****************score digit 1****************
+
+	for (int v = 0; v<8; v++) bytes_out[v] = pgm_read_byte(&NumberFont[ones][v]);
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][4] = scoreDisplayBuffer[i][4] | (bytes_out[i] << 6);
+	}
+
+	//write the number to the Score buffer
+	for (int i = 0; i < 8; i++)
+	{
+		scoreDisplayBuffer[i][5] = scoreDisplayBuffer[i][5] | bytes_out[i] >> 1;
+
+	}
+
+	//set Vertical addressing mode and column - page start end
+	OLEDCommand(OLED_SET_ADDRESSING);
+	OLEDCommand(OLED_VERTICAL_ADDRESSING);
+
+	OLEDCommand(OLED_SET_COLUMN);
+	OLEDCommand(120);                 //Set column start
+	OLEDCommand(127);                 //Set column end
+
+	OLEDCommand(OLED_SET_PAGE);
+	OLEDCommand(0);                  //Set page start
+	OLEDCommand(5);                  //Set page end
+
+	for (int p = 0; p < 8; p++)
+	{
+		for (int c = 0; c <6; c++)
+		{
+			if (blank) OLEDData(0);
+			else OLEDData(scoreDisplayBuffer[p][c]);
+		}
+
+	}
 }
 
 
@@ -1205,4 +1313,3 @@ void loop() {
     }
   }
 }
-

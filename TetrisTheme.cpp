@@ -15,6 +15,11 @@
 
 #include <Arduino.h>
 
+#ifdef ROTARYCPP
+#include <ClickEncoder.h>
+extern ClickEncoder *encoder;
+#endif 
+
 #ifndef PIEZO_PIN
 #define PIEZO_PIN  (3)
 #endif
@@ -184,6 +189,16 @@ static const float bass_times[] = {
 static const int lead_note_count = sizeof(lead_notes) / sizeof(float);
 static const int bass_note_count = sizeof(bass_notes) / sizeof(float);
 
+#ifdef KEYPAD_PIN
+volatile static const int pinInterrupt = KEYPAD_PIN;
+volatile static const int pinInterruptValue = LOW;
+#else
+// change this to the pin you want to use as "Start Button"
+// it will stop the tune and let the game start
+volatile static const int pinInterrupt = 5;
+volatile static const int pinInterruptValue = LOW;
+#endif
+
 static volatile boolean songOn;
 
  
@@ -254,7 +269,13 @@ class TetrisTheme {
           curr_bass_note_time_remaining = 0.5;// bass_times[curr_bass_note]; // hardcoded
         }
         
-        if(digitalRead(A0) == LOW) {
+#ifdef ROTARYCPP
+        ClickEncoder::Button b = encoder->getButton();
+        bool stopNow = (b == ClickEncoder::Clicked);
+#else
+        bool stopNow = (digitalRead(pinInterrupt) == pinInterruptValue);
+#endif
+        if (stopNow) {
           songOn = false; 
         }
       }
